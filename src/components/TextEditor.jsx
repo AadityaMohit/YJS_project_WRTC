@@ -21,11 +21,26 @@ const TextEditor = () => {
  
     const handleInput = (event) => {
       const newValue = event.target.value;
-
+      const oldValue = yText.toString();
+  
+      const cursorPosition = event.target.selectionStart;
     
-      yText.delete(0, yText.length);
-      yText.insert(0, newValue);
+      if (newValue.length > oldValue.length) {
+ 
+        const addedText = newValue.slice(cursorPosition - (newValue.length - oldValue.length), cursorPosition);
+        yText.insert(cursorPosition - addedText.length, addedText);
+      } else if (newValue.length < oldValue.length) {
+ 
+        const deleteCount = oldValue.length - newValue.length;
+        yText.delete(cursorPosition, deleteCount);
+      }
+     
+      setTimeout(() => {
+        textareaRef.current.setSelectionRange(cursorPosition, cursorPosition);
+      }, 0);
     };
+    
+    
 
     textareaRef.current.addEventListener('input', handleInput);
 
